@@ -1,0 +1,32 @@
+---
+title: "EDLD 652 Lab 1"
+author: "Havisha Khurana, Merly Klaas, Cassie Malcom"
+date: "1/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(pacman)
+```
+
+```{r}
+pacman::p_load(tidyverse, rio, here, ggplot2, ggforce, ggridges, ggthemes, colorspace, forcats, stringr, janitor)
+```
+
+```{r load data}
+rstats <- import(here("data", "rstats_tweets.rds")) %>%
+    as_tibble() %>%
+    clean_names()
+
+rstats
+```
+
+### Initial Exploration 1: Histograms
+```{r}
+
+```
+

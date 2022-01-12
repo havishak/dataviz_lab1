@@ -24,9 +24,34 @@ rstats <- import(here("data", "rstats_tweets.rds")) %>%
 
 rstats
 ```
+## 1. Initial exploration
+ * Create histograms and density plots of the display_text_width. 
+ * Try at least four different binning methods and select what you think best represents the data for each. 
+ * Provide a brief justification for your decision.
 
-### Initial Exploration 1: Histograms
 ```{r}
 
 ```
 
+## 2. Look for “plot”
+* Search the text column for the work “plot”. 
+* Report the proportion of posts containing this word.
+
+```{r}
+
+```
+
+## 3. Plot rough draft
+* Create the following figure of the 15 most common words represented in the posts.
+* Some guidance: You’ll need to drop a few additional words beyond stop words to get a clear picture as above. Consider removing rows where the word is not %in% c("t.co", "https", "http", "rt", "rstats"). This can be a bit tricky (see here for additional help)
+
+
+```{r}
+
+```
+## 4. Stylized Plot
+* Style the plot so it (mostly) matches the below. It does not need to be exact, but it should be close.
+
+```{r}
+
+```

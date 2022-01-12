@@ -30,3 +30,40 @@ rstats
 
 ```
 
+### Initial Exploration 2: Density Plots
+
+Let's first plot with the default print setting and see how it looks.
+
+```{r dp_default}
+rstats %>% 
+  select(display_text_width) %>% 
+  ggplot(aes(x = display_text_width))+
+  geom_density(color = "cyan4", fill = "cyan3")+
+  theme_minimal()+
+  labs(
+    x = "Characters in Tweet",
+    y = "Density"
+  )
+```
+
+Let's now set four different bin_width.
+
+```{r dp_set}
+bin_width = c(2, 5, 10, 50)
+
+for (w in bin_width) {
+plot <- rstats %>% 
+  select(display_text_width) %>% 
+  ggplot(aes(x = display_text_width))+
+  geom_density(color = "cyan4", fill = "cyan3", bw = w)+
+  theme_minimal()+
+  labs(
+    x = "Characters in Tweet",
+    y = "Density"
+  )
+print(plot)
+}
+```
+
+I like the default bin_width as well as bin_widths of 5 and 10. In these three settings, I can clearly tell the graph has three modes at about 80, 130 and 280 characters. Based on the audience, I might choose bin_width of 10 to prevent any confusions about the other little peeks. 
+

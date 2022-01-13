@@ -114,6 +114,18 @@ plot
 * Style the plot so it (mostly) matches the below. It does not need to be exact, but it should be close.
 
 ```{r}
-
+plot <- tweet_words %>% 
+  slice(1:15) %>% 
+  ggplot(aes(n, reorder(word,n))) +
+  geom_col(fill = "cornflowerblue") +
+   geom_vline(xintercept=c(20000, 40000, 60000), color = "gray")+
+  labs(x= "Count",
+       y = "Word",
+       title = "Word frequencies in posts",
+       subtitle = "Top 15 words displayed",
+       caption = "Data from Mike Kearny, distributed via #tidytuesday") +
+  scale_x_continuous(expand = c(0,0) ) + 
+  theme (axis.ticks = element_blank())
+plot
 ```
 

@@ -25,9 +25,48 @@ rstats <- import(here("data", "rstats_tweets.rds")) %>%
  * Try at least four different binning methods and select what you think best represents the data for each. 
  * Provide a brief justification for your decision.
 
+### Initial exploration 1: Histogram
+
 ```{r}
 
 ```
+
+### Initial Exploration 2: Density Plots
+
+Let's first plot with the default print setting and see how it looks.
+
+```{r dp_default}
+rstats %>% 
+  select(display_text_width) %>% 
+  ggplot(aes(x = display_text_width))+
+  geom_density(color = "cyan4", fill = "cyan3")+
+  theme_minimal()+
+  labs(
+    x = "Characters in Tweet",
+    y = "Density"
+  )
+```
+
+Let's now set four different bin_width.
+
+```{r dp_set}
+bin_width = c(2, 5, 10, 50)
+
+for (w in bin_width) {
+plot <- rstats %>% 
+  select(display_text_width) %>% 
+  ggplot(aes(x = display_text_width))+
+  geom_density(color = "cyan4", fill = "cyan3", bw = w)+
+  theme_minimal()+
+  labs(
+    x = "Characters in Tweet",
+    y = "Density"
+  )
+print(plot)
+}
+```
+
+**I like the default bin_width as well as bin_widths of 5 and 10. In these three settings, I can clearly tell the graph has three modes at about 80, 130 and 280 characters. Based on the audience, I might choose bin_width of 10 to prevent any confusions about the other little peaks.** 
 
 ## 2. Look for “plot”
 * Search the text column for the word “plot”. 
@@ -77,3 +116,4 @@ plot
 ```{r}
 
 ```
+

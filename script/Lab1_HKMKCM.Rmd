@@ -30,17 +30,27 @@ rstats <- import(here("data", "rstats_tweets.rds")) %>%
 ```
 
 ## 2. Look for “plot”
-* Search the text column for the work “plot”. 
+* Search the text column for the word “plot”. 
 * Report the proportion of posts containing this word.
 
 ```{r}
 
+# count the number of word "plot"
+sum(str_count(rstats$text, "plot"))
+
+#proportion of posts containing "plot"
+dat <- rstats %>% select(text) %>% 
+filter(grepl("plot", text)) %>% 
+  count() 
+dat
+dat / count(rstats) * 100
+
 ```
+**There are 32,941 words contain the word "plot" in 26,968 posts. The proportion of posts containing the word "plot" is 6.3% of total 429,513 posts.**
 
 ## 3. Plot rough draft
 * Create the following figure of the 15 most common words represented in the posts.
 * Some guidance: You’ll need to drop a few additional words beyond stop words to get a clear picture as above. Consider removing rows where the word is not %in% c("t.co", "https", "http", "rt", "rstats"). This can be a bit tricky (see here for additional help)
-
 
 ```{r clean_data, cache = TRUE}
 tweet_words <- rstats %>% 

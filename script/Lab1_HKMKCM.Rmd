@@ -10,19 +10,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(pacman)
+pacman::p_load(tidyverse, rio, here, ggplot2, forcats, stringr, janitor, tidytext)
 ```
 
-```{r}
-pacman::p_load(tidyverse, rio, here, ggplot2, ggforce, ggridges, ggthemes, colorspace, forcats, stringr, janitor)
-```
-
-```{r load data}
+```{r load data, cache = TRUE}
 rstats <- import(here("data", "rstats_tweets.rds")) %>%
     as_tibble() %>%
     clean_names()
 
-rstats
+#rstats
 ```
 ## 1. Initial exploration
  * Create histograms and density plots of the display_text_width. 
@@ -46,9 +42,25 @@ rstats
 * Some guidance: You’ll need to drop a few additional words beyond stop words to get a clear picture as above. Consider removing rows where the word is not %in% c("t.co", "https", "http", "rt", "rstats"). This can be a bit tricky (see here for additional help)
 
 
-```{r}
-
+```{r clean_data, cache = TRUE}
+tweet_words <- rstats %>% 
+  select(text) %>% 
+  unnest_tokens(word, text) %>% 
+  anti_join(stop_words) %>% 
+  filter(!word %in% c("t.co", "https", "http", "rt", "rstats")) %>% 
+  count(word, sort = TRUE) 
 ```
+```{r basic_plot}
+plot <- tweet_words %>% 
+  slice(1:15) %>% 
+  ggplot(aes(n, reorder(word,n))) +
+  geom_col() +
+  ylab("word")
+
+plot
+```
+
+
 ## 4. Stylized Plot
 * Style the plot so it (mostly) matches the below. It does not need to be exact, but it should be close.
 

@@ -25,13 +25,41 @@ rstats <- import(here("data", "rstats_tweets.rds")) %>%
  * Try at least four different binning methods and select what you think best represents the data for each. 
  * Provide a brief justification for your decision.
 
-### Initial exploration 1: Histogram
+## Initial exploration 1: Histograms
 
+This first histogram is done at the default settings of bin = 30.
 ```{r}
-
+ggplot(rstats, aes(x = display_text_width)) +
+geom_histogram(color = "cyan4", fill = "cyan3") +
+  labs(x = "Characters in Tweet")
 ```
 
-### Initial Exploration 2: Density Plots
+The same histogram is now shown for 4 different bin widths.
+```{r}
+ggplot(rstats, aes(x = display_text_width)) +
+geom_histogram(color = "cyan4", fill = "cyan3", alpha = 0.9, bins = 2) +
+  labs(x = "Characters in Tweet")
+```
+
+```{r}
+ggplot(rstats, aes(x = display_text_width)) +
+geom_histogram(color = "cyan4", fill = "cyan3", alpha = 0.9, bins = 5) +
+  labs(x = "Characters in Tweet")
+```
+
+```{r}
+ggplot(rstats, aes(x = display_text_width)) +
+geom_histogram(color = "cyan4", fill = "cyan3", alpha = 0.9, bins = 10) +
+  labs(x = "Characters in Tweet")
+```
+**The histogram with bin = 50 appears to show more nuances in the variation, especially in the shorter bars in the right-hand tail. This histogram seems better than the others to show an overview of how many tweets had a certain number of characters.**
+```{r}
+ggplot(rstats, aes(x = display_text_width)) +
+geom_histogram(color = "cyan4", fill = "cyan3", alpha = 0.9, bins = 50) +
+  labs(x = "Characters in Tweet")
+```
+
+## Initial Exploration 2: Density Plots
 
 Let's first plot with the default print setting and see how it looks.
 
@@ -85,7 +113,7 @@ dat
 dat / count(rstats) * 100
 
 ```
-**There are 32,941 words contain the word "plot" in 26,968 posts. The proportion of posts containing the word "plot" is 6.3% of total 429,513 posts.**
+**There are 32,941 words containing the word "plot" in 26,968 posts. The proportion of posts containing the word "plot" is 6.3% of total 429,513 posts.**
 
 ## 3. Plot rough draft
 * Create the following figure of the 15 most common words represented in the posts.

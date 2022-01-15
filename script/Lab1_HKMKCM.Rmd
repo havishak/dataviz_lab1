@@ -6,11 +6,12 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE)
 ```
 
 ```{r}
-pacman::p_load(tidyverse, rio, here, ggplot2, forcats, stringr, janitor, tidytext)
+pacman::p_load(tidyverse, rio, here, stringr, janitor, tidytext)
 ```
 
 ```{r load data, cache = TRUE}
@@ -18,7 +19,6 @@ rstats <- import(here("data", "rstats_tweets.rds")) %>%
     as_tibble() %>%
     clean_names()
 
-#rstats
 ```
 ## 1. Initial exploration
  * Create histograms and density plots of the display_text_width. 
@@ -52,7 +52,10 @@ ggplot(rstats, aes(x = display_text_width)) +
 geom_histogram(color = "cyan4", fill = "cyan3", alpha = 0.9, bins = 10) +
   labs(x = "Characters in Tweet")
 ```
+
 **The histogram with bin = 50 appears to show more nuances in the variation, especially in the shorter bars in the right-hand tail. This histogram seems better than the others to show an overview of how many tweets had a certain number of characters.**
+
+
 ```{r}
 ggplot(rstats, aes(x = display_text_width)) +
 geom_histogram(color = "cyan4", fill = "cyan3", alpha = 0.9, bins = 50) +
@@ -61,7 +64,7 @@ geom_histogram(color = "cyan4", fill = "cyan3", alpha = 0.9, bins = 50) +
 
 ## Initial Exploration 2: Density Plots
 
-Let's first plot with the default print setting and see how it looks.
+Let's first plot with the default bin-width value.
 
 ```{r dp_default}
 rstats %>% 
@@ -78,7 +81,7 @@ rstats %>%
 Let's now set four different bin_width.
 
 ```{r dp_set}
-bin_width = c(2, 5, 10, 50)
+bin_width = c(0.5, 5, 8, 50)
 
 for (w in bin_width) {
 plot <- rstats %>% 
@@ -88,13 +91,15 @@ plot <- rstats %>%
   theme_minimal()+
   labs(
     x = "Characters in Tweet",
-    y = "Density"
+    y = "Density",
+    subtitle = paste("binwidth = ",w)
   )
 print(plot)
 }
 ```
 
-**I like the default bin_width as well as bin_widths of 5 and 10. In these three settings, I can clearly tell the graph has three modes at about 80, 130 and 280 characters. Based on the audience, I might choose bin_width of 10 to prevent any confusions about the other little peaks.** 
+
+**The density plot with bin widths of 5 and 8 communicate the information well. In both cases, I can clearly tell the graph has three modes at about 80, 130 and 280 characters. Based on the audience, I might choose higher bin_width value of 8 to prevent any confusions about the other little peaks.** 
 
 ## 2. Look for “plot”
 * Search the text column for the word “plot”. 
@@ -103,17 +108,19 @@ print(plot)
 ```{r}
 
 # count the number of word "plot"
-sum(str_count(rstats$text, "plot"))
+plot_total <- sum(str_count(rstats$text, "plot"))
 
 #proportion of posts containing "plot"
-dat <- rstats %>% select(text) %>% 
-filter(grepl("plot", text)) %>% 
+post_total <- rstats %>% 
+  select(text) %>% 
+  filter(grepl("plot", text)) %>% 
   count() 
-dat
-dat / count(rstats) * 100
+
+post_prop <- post_total  / count(rstats) * 100
 
 ```
-**There are 32,941 words containing the word "plot" in 26,968 posts. The proportion of posts containing the word "plot" is 6.3% of total 429,513 posts.**
+
+**There are `r plot_total` words containing the word "plot" in `r post_total` posts. The proportion of posts containing the word "plot" is `r round(post_prop,2)` of total `r nrow(rstats)` posts.**
 
 ## 3. Plot rough draft
 * Create the following figure of the 15 most common words represented in the posts.
@@ -127,6 +134,7 @@ tweet_words <- rstats %>%
   filter(!word %in% c("t.co", "https", "http", "rt", "rstats")) %>% 
   count(word, sort = TRUE) 
 ```
+
 ```{r basic_plot}
 plot <- tweet_words %>% 
   slice(1:15) %>% 
